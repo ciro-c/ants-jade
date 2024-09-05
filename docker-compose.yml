@@ -1,0 +1,9 @@
+services:
+  docsify:
+    image: "node:latest"
+    volumes:
+      - ./:/docs
+    working_dir: /docs
+    ports:
+      - "3000:3000"
+    command:  bash -c "echo 'Instalando dependencias' && npm install docsify-cli -g && echo 'Iniciando' && docsify serve ."

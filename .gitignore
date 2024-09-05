@@ -15,3 +15,10 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# Docs specific
+node_modules/
+package*.json
+yarn/
+./yarn
+yarn*
