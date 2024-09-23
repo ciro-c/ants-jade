@@ -1,9 +1,9 @@
 services:
-  docsify:
-    image: "node:latest"
-    volumes:
-      - ./docs:/docs
-    working_dir: /docs
+  mkdocs:
+    image: squidfunk/mkdocs-material
     ports:
-      - "3000:3000"
-    command:  bash -c "echo 'Instalando dependencias' && npm install docsify-cli -g && echo 'Iniciando' && docsify serve ."
+      - "8005:8000"
+    volumes:
+      - ./:/docs
+    stdin_open: true
+    tty: true

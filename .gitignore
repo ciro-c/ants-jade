@@ -17,8 +17,4 @@ buildNumber.properties
 .classpath
 
 # Docs specific
-node_modules/
-package*.json
-yarn/
-.yarn/
-yarn*
+venv/

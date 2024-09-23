@@ -1,0 +1,7 @@
+site_name: Ants Jade
+site_url: https://ciro-c.github.io/ants-jade
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
