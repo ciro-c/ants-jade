@@ -20,5 +20,5 @@ buildNumber.properties
 node_modules/
 package*.json
 yarn/
-./yarn
+.yarn/
 yarn*

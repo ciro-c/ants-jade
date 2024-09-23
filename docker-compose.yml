@@ -2,7 +2,7 @@ services:
   docsify:
     image: "node:latest"
     volumes:
-      - ./:/docs
+      - ./docs:/docs
     working_dir: /docs
     ports:
       - "3000:3000"

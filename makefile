@@ -1,9 +1,9 @@
-PATH_PROJECT_JAR = target/cars-n-lights-1.0-SNAPSHOT.jar
-PATH_LIBS    = src/main/resources/libs
-LIBS_JAR    = $(PATH_LIBS)/jade.jar:$(PATH_LIBS)/jadeExamples:$(PATH_LIBS)/commons-codec-1.3
+PATH_PROJECT_JAR = target/maven-jade-1.0-SNAPSHOT.jar
+PATH_LIBS    = src/libs
+LIBS_JAR    = $(PATH_LIBS)/jade.jar:$(PATH_LIBS)/jadeExamples.jar:$(PATH_LIBS)/commons-codec-1.3.jar
 PROJECT_CLASS_PATH = $(LIBS_JAR):$(PATH_PROJECT_JAR)
-PROJECT_GROUP    = org.fga.paradigmas
-JADE_AGENTS      = mainAgent:$(PROJECT_GROUP).App; pedestrianAgent:$(PROJECT_GROUP).agents.PedestrianAgent;
+PROJECT_GROUP    = com.mvnJade.app
+JADE_AGENTS      = mainAgent:$(PROJECT_GROUP).HelloWorld;
 JADE_FLAGS 		 = -gui -agents "$(JADE_AGENTS)"
 
 .PHONY:
@@ -16,6 +16,14 @@ build-and-run:
 
 build:
 	@echo "Gerando a build do projeto"
+	make build-libs build-maven
+
+build-libs:
+	@echo "Instalando JAR libs externas"
+	make install-jade install-commons install-examples-jade
+
+build-maven:
+	@echo "Build do projeto"
 	./mvnw clean install
 
 run:
@@ -32,4 +40,28 @@ build-and-run-win:
 
 build-win:
 	@echo "Gerando a build do projeto"
-	.\mvnw clean install
+	.\mvnw install
+
+install-jade:
+	@echo "Instalando Jade"
+	./mvnw clean install:install-file -Dfile=$(PATH_LIBS)/jade.jar \
+   -DgroupId=jade \
+   -DartifactId=jade \
+   -Dversion=4.6.0 \
+   -Dpackaging=jar
+
+install-commons:
+	@echo "Instalando Commons"
+	./mvnw clean install:install-file -Dfile=$(PATH_LIBS)/commons-codec-1.3.jar \
+   -DgroupId=commons-codec \
+   -DartifactId=commons-codec \
+   -Dversion=1.3.0 \
+   -Dpackaging=jar
+
+install-examples-jade:
+	@echo "Instalando exemplos jade"
+	./mvnw clean install:install-file -Dfile=$(PATH_LIBS)/jadeExamples.jar \
+   -DgroupId=jadeExamples \
+   -DartifactId=jadeExamples \
+   -Dversion=1.0.0 \
+   -Dpackaging=jar
