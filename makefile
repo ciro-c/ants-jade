@@ -30,6 +30,10 @@ run:
 	@echo "Executando o projeto com a última build criada"
 	java -cp $(PROJECT_CLASS_PATH) jade.Boot $(JADE_FLAGS)
 
+run-gui:
+	@echo "Executando o projeto com gui"
+	java -cp $(PROJECT_CLASS_PATH) com.mvnJade.app.App
+
 clean:
 	@echo "Removendo a build do projeto"
 	./mvnw clean

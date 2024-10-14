@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.mvnJade.app</groupId>
   <artifactId>maven-jade</artifactId>
@@ -7,6 +7,7 @@
   <version>1.0-SNAPSHOT</version>
   <name>maven-jade</name>
   <url>http://maven.apache.org</url>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -15,19 +16,36 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-        <groupId>jade</groupId>
-        <artifactId>jade</artifactId>
-        <version>4.6.0</version>
+      <groupId>jade</groupId>
+      <artifactId>jade</artifactId>
+      <version>4.6.0</version>
     </dependency>
     <dependency>
-        <groupId>commons-codec</groupId>
-        <artifactId>commons-codec</artifactId>
-        <version>1.3.0</version>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.3.0</version>
     </dependency>
     <dependency>
-        <groupId>jadeExamples</groupId>
-        <artifactId>jadeExamples</artifactId>
-        <version>1.0.0</version>
+      <groupId>jadeExamples</groupId>
+      <artifactId>jadeExamples</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>22.0.1</version>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+        <configuration>
+          <mainClass>HelloFX</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
