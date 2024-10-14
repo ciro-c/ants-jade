@@ -8,7 +8,7 @@ Procurando por um repositório modelo base com apenas o [MAVEN](https://maven.ap
 Para mais informações consulte: [Documentação do projeto](https://ciro-c.github.io/ants-jade/)
 
 #### Requisitos 
- Para aplicação é necessário `JAVA >= 11`
+ Para aplicação é necessário `JAVA >= 17`
 
  **Opcional** Para documentos é necessário `docker compose`
 
