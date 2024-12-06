@@ -32,7 +32,7 @@ run:
 
 run-gui:
 	@echo "Executando o projeto com gui"
-	java -cp $(PROJECT_CLASS_PATH) com.mvnJade.app.App
+	./mvnw javafx:run
 
 clean:
 	@echo "Removendo a build do projeto"

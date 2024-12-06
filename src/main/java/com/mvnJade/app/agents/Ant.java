@@ -25,13 +25,18 @@ public class Ant extends Agent {
   double randomProbaility = 0.1;
   int maxPheromone = 200;
 
+  int testMapSize = 30;
+
   protected void setup() {
-    System.out.println("Hello ant:" + getName());
+    // System.out.println("Hello ant:" + getName());
     world = World.getInstance();
-    addBehaviour(new TickerBehaviour(this, 1000) {
+    addBehaviour(new TickerBehaviour(this, 10) {
       protected void onTick() {
-        System.out.println("Agent " + myAgent.getLocalName() + ": tick=" + getTickCount());
-        System.out.println("X:" + x + ", Y:" + y);
+        // System.out.println("Agent " + myAgent.getLocalName() + ": tick=" + getTickCount());
+        // System.out.println("X:" + x + ", Y:" + y);
+        if (!world.getRunning()) {
+          return;
+        }
         MapTileDTO currentTile = world.getPosition(x, y);
         if (currentTile == null || currentTile.getIsBlock()) {
           System.out.println("Bye");
@@ -44,7 +49,7 @@ public class Ant extends Agent {
         if (hasFood) {
           if (currentTile.getIsHome()) {
             hasFood = false;
-            System.out.println("Depositando comida");
+            // System.out.println("Depositando comida");
             return;
           }
           moveAnt();
@@ -53,7 +58,7 @@ public class Ant extends Agent {
 
         if (currentTile.getIsFood()) {
           hasFood = true;
-          System.out.println("Pegando comida");
+          // System.out.println("Pegando comida");
 
           return;
         }
@@ -64,16 +69,36 @@ public class Ant extends Agent {
   }
 
   private void moveAnt() {
-    System.out.println("Movendo");
+    // System.out.println("Movendo");
 
-
-    if (hasFood) {
+    // world.getPosition(x - 1, y + 1);
+    if (x == 0 && y == 0) {
+      x = 1;
+      return ;
+    } else if (x == testMapSize-1 && y == testMapSize-1) {
+      x = 0;
+      y = 0;
+      return ;
+    } else if (y == testMapSize-1 && x != testMapSize-1) {
+      x++;
+      return ;
       
-    } else {
+    } else if (x == testMapSize-1) {
+      y++;
+      x=0;
+      return ;
+    } 
+    
+    x++;
+    return;
 
-    }
+    // if (hasFood) {
+      
+    // } else {
 
-    world.getPosition(x - 1, y + 1);
+    // }
+
+    // world.getPosition(x - 1, y + 1);
 
         // Mason example                
         // Int2D location = af.buggrid.getObjectLocation(this);
@@ -156,7 +181,8 @@ public class Ant extends Agent {
         //     if (max == 0 && last != null)  // nowhere to go!  Maybe go straight
         //         {
         //         if (state.random.nextBoolean(af.momentumProbability))
-        //             {
+        //             {    this.map[0][0].;
+
         //             int xm = x + (x - last.x);
         //             int ym = y + (y - last.y);
         //             if (xm >= 0 && xm < AntsForage.GRID_WIDTH && ym >= 0 && ym < AntsForage.GRID_HEIGHT && af.obstacles.field[xm][ym] == 0)
