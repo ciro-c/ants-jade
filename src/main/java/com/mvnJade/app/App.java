@@ -33,9 +33,10 @@ import jade.core.Runtime;
  */
 public class App extends Application {
     private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    private boolean stop = false;
     ContainerController cc = Runtime.instance().createMainContainer(new ProfileImpl());
     Object[] agentArgs = {};
+    int antNumberToLaunch = 200;
+    int antsLaunched = 0;
 
     public void ok() {
         System.out.println("Hello World!");
@@ -43,21 +44,21 @@ public class App extends Application {
         World newWorld = World.getInstance(30);
 
         try {
-            launchAnt(1);
             newWorld.play();
             executor.scheduleWithFixedDelay(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        if (stop==true) {
+                        if (antsLaunched >= antNumberToLaunch) {
                             throw new Exception("Stop");
                         }
-                        launchAnt(2);
+                        launchAnt(antsLaunched++);
                     } catch (Exception e) {
                         executor.shutdown();
+                        System.out.println(e.getMessage());
                     }
                 }
-            }, 1000, 100, TimeUnit.MILLISECONDS);
+            }, 500, 100, TimeUnit.MILLISECONDS);
 
             // TODO: Start gui and add multiple ants
         } catch (Exception e) {

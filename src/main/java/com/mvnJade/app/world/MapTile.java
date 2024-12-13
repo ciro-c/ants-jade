@@ -7,8 +7,8 @@ import javafx.scene.layout.StackPane;
 public class MapTile extends StackPane {
 
     // == constants ==
-    public static final double ITEM_HEIGHT = 50.0d;
-    public static final double ITEM_WIDTH = 50.0d;
+    public static final double ITEM_HEIGHT = 25.0d;
+    public static final double ITEM_WIDTH = 25.0d;
 
     private float intensity = 1.0f;
     private TileType tileType = TileType.EMPTY;
@@ -27,7 +27,7 @@ public class MapTile extends StackPane {
 
     private void updateStyle() {
         setStyle(tileType.color);
-        // setStyle(tileType.color+"-fx-opacity:"+intensity);
+        setOpacity(intensity);
     }
 
     public void updateStyle(TileType tileType, float intensity) {

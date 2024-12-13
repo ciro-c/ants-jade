@@ -1,7 +1,7 @@
 package com.mvnJade.app.world;
 
 import java.util.ArrayList;
-import java.util.Observable;
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -9,18 +9,6 @@ import java.util.concurrent.TimeUnit;
 import com.mvnJade.app.dto.MapTileDTO;
 import com.mvnJade.app.enums.TileType;
 
-import javafx.event.EventType;
-import javafx.geometry.Pos;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.Scene;
@@ -40,6 +28,9 @@ public final class World{
   MapTileDTO map[][];
   MapTile mapTiles[][];
   int mapSize;
+  int stepsPerClock = 1;
+  int internalStep = 0;
+  int pheromoneDeposit = 500;
   TilePane worldGrid = new TilePane();
   Stage stage = new Stage();
 
@@ -59,8 +50,8 @@ public final class World{
     MapTileDTO foodSpot = new MapTileDTO(false,false,true);
     this.map[0][0] = homeSpot;
     this.mapTiles[0][0] = new MapTile(TileType.HOME, 1.0f);
-    this.map[2][2] = foodSpot; 
-    this.mapTiles[2][2] = new MapTile(TileType.FOOD, 1.0f);
+    this.map[20][20] = foodSpot; 
+    this.mapTiles[20][20] = new MapTile(TileType.FOOD, 1.0f);
     this.worldGrid = new WorldGrid(this.mapTiles, mapSize);
     stage.setScene(new Scene(worldGrid));
     stage.show();
@@ -109,10 +100,10 @@ public final class World{
     }
     if (hasFood) {
       int feromoneLevel = this.map[x][y].getPheromoneFoundFood(); 
-      this.map[x][y].setPheromoneFoundFood(feromoneLevel+10);
+      this.map[x][y].setPheromoneFoundFood(feromoneLevel+pheromoneDeposit);
     } else {
       int feromoneLevel = this.map[x][y].getPheromoneExploring(); 
-      this.map[x][y].setPheromoneExploring(feromoneLevel+10);
+      this.map[x][y].setPheromoneExploring(feromoneLevel+pheromoneDeposit);
     }
   }
 
@@ -139,6 +130,11 @@ public final class World{
     if (running == false) {
       return;
     }
+    if (internalStep <= stepsPerClock) {
+      internalStep++;
+      return;
+    }
+    internalStep = 0;
     ArrayList<Rectangle> toAdd = new ArrayList();
     for (int i = 0; i < mapSize; i++) {
       for (int j = 0; j < mapSize; j++) {
@@ -156,16 +152,20 @@ public final class World{
         }
         if (pheromoneFoundFood > pheromoneExploring) {
           toAdd.add(new Rectangle(50, 50, Color.GREEN));
-          mapTiles[i][j].updateStyle(TileType.PHEROMONE_FOUND_FOOD, (float)pheromoneFoundFood/200);
+          mapTiles[i][j].updateStyle(TileType.PHEROMONE_FOUND_FOOD, (float)pheromoneFoundFood/1000);
         } else if (pheromoneExploring > 0) {
           toAdd.add(new Rectangle(50, 50, Color.BLUE));
-          mapTiles[i][j].updateStyle(TileType.PHEROMONE_EXPLORING, (float)pheromoneExploring/200);
+          mapTiles[i][j].updateStyle(TileType.PHEROMONE_EXPLORING, (float)pheromoneExploring/1000);
         } else {
           toAdd.add(new Rectangle(50, 50, Color.RED));
           mapTiles[i][j].updateStyle(TileType.EMPTY, 1.0f);
         }
       }
     }
+  }
+
+  public int getStepsPerClock() {
+    return stepsPerClock;
   }
 
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import com.mvnJade.app.MersenneTwisterFast;
 import com.mvnJade.app.dto.MapTileDTO;
 import com.mvnJade.app.world.World;
 
@@ -17,26 +18,38 @@ public class Ant extends Agent {
   protected Map<String, Object> spaces;
 
   private World world;
+  private int internalStep = 0;
+  private MersenneTwisterFast random;
 
   int x = 0, y = 0, lastX = 0, lastY = 0;
   boolean hasFood = false;
   double reward = 0;
   double momentumProbability = 0.8;
   double randomProbaility = 0.1;
-  int maxPheromone = 200;
+  int maxPheromone = 1000;
+  final int impossibleBadPheromone = -1;
+  final double rewardGain = 1.0;
 
   int testMapSize = 30;
 
   protected void setup() {
-    // System.out.println("Hello ant:" + getName());
+    System.out.println("Hello ant:" + getName());
+    random = new MersenneTwisterFast();
     world = World.getInstance();
     addBehaviour(new TickerBehaviour(this, 10) {
       protected void onTick() {
-        // System.out.println("Agent " + myAgent.getLocalName() + ": tick=" + getTickCount());
+        // System.out.println("Agent " + myAgent.getLocalName() + ": tick=" +
+        // getTickCount());
         // System.out.println("X:" + x + ", Y:" + y);
         if (!world.getRunning()) {
           return;
         }
+
+        if (internalStep <= world.getStepsPerClock()) {
+          internalStep++;
+          return;
+        }
+        internalStep = 0;
         MapTileDTO currentTile = world.getPosition(x, y);
         if (currentTile == null || currentTile.getIsBlock()) {
           System.out.println("Bye");
@@ -53,6 +66,7 @@ public class Ant extends Agent {
             return;
           }
           moveAnt();
+          // fakeMove();
           return;
         }
 
@@ -64,147 +78,149 @@ public class Ant extends Agent {
         }
 
         moveAnt();
+        // fakeMove();
       }
     });
   }
 
-  private void moveAnt() {
-    // System.out.println("Movendo");
-
-    // world.getPosition(x - 1, y + 1);
+  private void fakeMove() {
+    // random.nextBoolean();
     if (x == 0 && y == 0) {
       x = 1;
-      return ;
-    } else if (x == testMapSize-1 && y == testMapSize-1) {
+      return;
+    } else if (x == testMapSize - 1 && y == testMapSize - 1) {
       x = 0;
       y = 0;
-      return ;
-    } else if (y == testMapSize-1 && x != testMapSize-1) {
+      return;
+    } else if (y == testMapSize - 1 && x != testMapSize - 1) {
       x++;
-      return ;
-      
-    } else if (x == testMapSize-1) {
+      return;
+
+    } else if (x == testMapSize - 1) {
       y++;
-      x=0;
-      return ;
-    } 
-    
+      x = 0;
+      return;
+    }
+
     x++;
     return;
+  }
 
-    // if (hasFood) {
-      
-    // } else {
+  private void moveAnt() {
+    int max = impossibleBadPheromone;
+    int max_x = x;
+    int max_y = y;
+    int maxCount = 2;
 
-    // }
+    if (hasFood) {
+      for (int dx = -1; dx < 2; dx++) {
+        for (int dy = -1; dy < 2; dy++) {
+          int _y = y + dy;
+          int _x = x + dx;
 
-    // world.getPosition(x - 1, y + 1);
+          MapTileDTO nextTile = world.getPosition(_x, _y);
+          if ((dx == 0 && dy == 0) || nextTile == null || nextTile.getIsBlock()) {
+            continue;
+          }
+          int exploringPheromone = nextTile.getPheromoneExploring();
+          if (exploringPheromone > max) {
+            maxCount = 2;
+          }
 
-        // Mason example                
-        // Int2D location = af.buggrid.getObjectLocation(this);
-                
-        // if (hasFoodItem)  // follow home pheromone
-        //     {
-        //     double max = AntsForage.IMPOSSIBLY_BAD_PHEROMONE;
-        //     int max_x = x;
-        //     int max_y = y;
-        //     int count = 2;
-        //     for(int dx = -1; dx < 2; dx++)
-        //         for(int dy = -1; dy < 2; dy++)
-        //             {
-        //             int _x = dx+x;
-        //             int _y = dy+y;
-        //             // Pula se for bloco
-        //             if ((dx == 0 && dy == 0) || _x < 0 || _y < 0 || _x >= world.getMapSize() || _y >= world.getMapSize() || world.getPosition(_x, _y).getIsBlock()) continue;
-        //             double m = af.toHomeGrid.field[_x][_y];
-        //             // if (m > max) {
-        //             //     count = 2;
-        //             // }
-        //             // no else, yes m > max is repeated
-        //             if (m > max || (m == max && state.random.nextBoolean(1.0 / count++)))  {
-        //               max = m;
-        //                 max_x = _x;
-        //                 max_y = _y;
-        //                 }
-        //             }
-        //     if (max == 0 && last != null)  // nowhere to go!  Maybe go straight
-        //         {
-        //         if (state.random.nextBoolean(af.momentumProbability))
-        //             {
-        //             int xm = x + (x - last.x);
-        //             int ym = y + (y - last.y);
-        //             if (xm >= 0 && xm < AntsForage.GRID_WIDTH && ym >= 0 && ym < AntsForage.GRID_HEIGHT && af.obstacles.field[xm][ym] == 0)
-        //                 { max_x = xm; max_y = ym; }
-        //             }
-        //         }
-        //     else if (state.random.nextBoolean(af.randomActionProbability))  // Maybe go randomly
-        //         {
-        //         int xd = (state.random.nextInt(3) - 1);
-        //         int yd = (state.random.nextInt(3) - 1);
-        //         int xm = x + xd;
-        //         int ym = y + yd;
-        //         if (!(xd == 0 && yd == 0) && xm >= 0 && xm < AntsForage.GRID_WIDTH && ym >= 0 && ym < AntsForage.GRID_HEIGHT && af.obstacles.field[xm][ym] == 0)
-        //             { max_x = xm; max_y = ym; }
-        //         }
-        //     af.buggrid.setObjectLocation(this, new Int2D(max_x, max_y));
-        //     if (af.sites.field[max_x][max_y] == AntsForage.HOME)  // reward me next time!  And change my status
-        //         { reward = af.reward ; hasFoodItem = ! hasFoodItem; }
-        //     }
-        // else
-        //     {
-        //     double max = AntsForage.IMPOSSIBLY_BAD_PHEROMONE;
-        //     int max_x = x;
-        //     int max_y = y;
-        //     int count = 2;
-        //     for(int dx = -1; dx < 2; dx++)
-        //         for(int dy = -1; dy < 2; dy++)
-        //             {
-        //             int _x = dx+x;
-        //             int _y = dy+y;
-        //             if ((dx == 0 && dy == 0) ||
-        //                 _x < 0 || _y < 0 ||
-        //                 _x >= AntsForage.GRID_WIDTH || _y >= AntsForage.GRID_HEIGHT || 
-        //                 af.obstacles.field[_x][_y] == 1) continue;  // nothing to see here
-        //             double m = af.toFoodGrid.field[_x][_y];
-        //             if (m > max)
-        //                 {
-        //                 count = 2;
-        //                 }
-        //             // no else, yes m > max is repeated
-        //             if (m > max || (m == max && state.random.nextBoolean(1.0 / count++)))  // this little magic makes all "==" situations equally likely
-        //                 {
-        //                 max = m;
-        //                 max_x = _x;
-        //                 max_y = _y;
-        //                 }
-        //             }
-        //     if (max == 0 && last != null)  // nowhere to go!  Maybe go straight
-        //         {
-        //         if (state.random.nextBoolean(af.momentumProbability))
-        //             {    this.map[0][0].;
+          if (exploringPheromone > max || (exploringPheromone == max && random.nextBoolean(1 / maxCount++))) {
+            max = exploringPheromone;
+            max_x = _x;
+            max_y = _y;
+          }
+        }
+      }
 
-        //             int xm = x + (x - last.x);
-        //             int ym = y + (y - last.y);
-        //             if (xm >= 0 && xm < AntsForage.GRID_WIDTH && ym >= 0 && ym < AntsForage.GRID_HEIGHT && af.obstacles.field[xm][ym] == 0)
-        //                 { max_x = xm; max_y = ym; }
-        //             }
-        //         }
-        //     else if (state.random.nextBoolean(af.randomActionProbability))  // Maybe go randomly
-        //         {
-        //         int xd = (state.random.nextInt(3) - 1);
-        //         int yd = (state.random.nextInt(3) - 1);
-        //         int xm = x + xd;
-        //         int ym = y + yd;
-        //         if (!(xd == 0 && yd == 0) && xm >= 0 && xm < AntsForage.GRID_WIDTH && ym >= 0 && ym < AntsForage.GRID_HEIGHT && af.obstacles.field[xm][ym] == 0)
-        //             { max_x = xm; max_y = ym; }
-        //         }
-        //     af.buggrid.setObjectLocation(this, new Int2D(max_x, max_y));
-        //     if (af.sites.field[max_x][max_y] == AntsForage.FOOD)  // reward me next time!  And change my status
-        //         { reward = af.reward; hasFoodItem = ! hasFoodItem; }
-        //     }
-        // last = location;
+      if (max == 0 && lastX != x && lastY != y) {
+        if (random.nextBoolean(momentumProbability)) {
+          int xm = x + (x - lastX);
+          int ym = y + (y - lastY);
 
+          if (xm >= 0 && ym >= 0 && world.getPosition(xm, ym) != null) {
+            max_x = xm;
+            max_y = ym;
+          }
+        }
+      } else if (random.nextBoolean(randomProbaility)) {
+        int xd = (random.nextInt(3) - 1);
+        int yd = (random.nextInt(3) - 1);
+        int xm = x + xd;
+        int ym = y + yd;
+        MapTileDTO newPosition = world.getPosition(xm, ym);
+        if (!(xd == 0 && yd == 0) && xm >= 0 && ym >= 0 && newPosition != null && !newPosition.getIsBlock()) {
+          max_x = xm;
+          max_y = ym;
+        }
+      }
 
+      lastX = x;
+      lastY = y;
+      x = max_x;
+      y = max_y;
+      if (world.getPosition(max_x, max_y).getIsHome()) {
+        reward = rewardGain;
+        hasFood = false;
+      }
+      return;
+    }
+
+    for (int dx = -1; dx < 2; dx++) {
+      for (int dy = -1; dy < 2; dy++) {
+        int _y = y + dy;
+        int _x = x + dx;
+
+        MapTileDTO nextTile = world.getPosition(_x, _y);
+        if ((dx == 0 && dy == 0) || nextTile == null || nextTile.getIsBlock()) {
+          continue;
+        }
+        int foodPheromone = nextTile.getPheromoneFoundFood();
+        if (foodPheromone > max) {
+          maxCount = 2;
+        }
+
+        if (foodPheromone > max || (foodPheromone == max && random.nextBoolean(1 / maxCount++))) {
+          max = foodPheromone;
+          max_x = _x;
+          max_y = _y;
+        }
+      }
+    }
+
+    if (max == 0 && lastX != x && lastY != y) {
+      if (random.nextBoolean(momentumProbability)) {
+        int xm = x + (x - lastX);
+        int ym = y + (y - lastY);
+
+        if (xm >= 0 && ym >= 0 && world.getPosition(xm, ym) != null) {
+          max_x = xm;
+          max_y = ym;
+        }
+      }
+    } else if (random.nextBoolean(randomProbaility)) {
+      int xd = (random.nextInt(3) - 1);
+      int yd = (random.nextInt(3) - 1);
+      int xm = x + xd;
+      int ym = y + yd;
+      MapTileDTO newPosition = world.getPosition(xm, ym);
+      if (!(xd == 0 && yd == 0) && xm >= 0 && ym >= 0 && newPosition != null && !newPosition.getIsBlock()) {
+        max_x = xm;
+        max_y = ym;
+      }
+    }
+    lastX = x;
+    lastY = y;
+    // System.out.println("X:" + x + ", Y:" + y);
+    // System.out.println("Max X:" + max_x + ", Max Y:" + max_y);
+    x = max_x;
+    y = max_y;
+    if (world.getPosition(max_x, max_y).getIsFood()) {
+      reward = rewardGain;
+      hasFood = true;
+    }
   }
 
   private void depositPherommones() {
