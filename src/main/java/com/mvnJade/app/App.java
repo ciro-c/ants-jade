@@ -28,29 +28,31 @@ import jade.core.ProfileImpl;
 import jade.core.Runtime;
 
 /**
- * Hello world!
- *
+ * Ant Colony Optimization Simulation
  */
 public class App extends Application {
     private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
     ContainerController cc = Runtime.instance().createMainContainer(new ProfileImpl());
     Object[] agentArgs = {};
-    int antNumberToLaunch = 200;
+    int antNumberToLaunch = 1000;
     int antsLaunched = 0;
+    int worldSize = 30;
+    boolean isRunning = false;
 
-    public void ok() {
-        System.out.println("Hello World!");
-        System.out.println("Conceiner created");
-        World newWorld = World.getInstance(30);
+    public void startSimulation() {
+        System.out.println("Starting ACO Simulation");
+        System.out.println("Container created");
+        World newWorld = World.getInstance(worldSize);
 
         try {
             newWorld.play();
+            isRunning = true;
             executor.scheduleWithFixedDelay(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         if (antsLaunched >= antNumberToLaunch) {
-                            throw new Exception("Stop");
+                            throw new Exception("All ants launched");
                         }
                         launchAnt(antsLaunched++);
                     } catch (Exception e) {
@@ -58,64 +60,70 @@ public class App extends Application {
                         System.out.println(e.getMessage());
                     }
                 }
-            }, 500, 100, TimeUnit.MILLISECONDS);
+            }, 200, 50, TimeUnit.MILLISECONDS);
 
-            // TODO: Start gui and add multiple ants
         } catch (Exception e) {
             e.printStackTrace();
-            // TODO: handle exception
+        }
+    }
+    
+    public void stopSimulation() {
+        if (isRunning) {
+            executor.shutdown();
+            World.getInstance().stop();
+            isRunning = false;
+            System.out.println("Simulation stopped");
         }
     }
 
     void launchAnt(int number) throws Exception {
-        AgentController ag = cc.createNewAgent("testAnt" + number, "com.mvnJade.app.agents.Ant", agentArgs);
+        AgentController ag = cc.createNewAgent("ant" + number, "com.mvnJade.app.agents.Ant", agentArgs);
         ag.start();
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // primaryStage.setTitle("Hello World!");
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
+        Button startBtn = new Button();
+        startBtn.setText("Start Simulation");
+        
+        Button stopBtn = new Button();
+        stopBtn.setText("Stop Simulation");
+        stopBtn.setDisable(true);
 
-        VBox root = new VBox();
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
 
-        // primaryStage.setScene(new Scene(root, 500, 500));
-        // primaryStage.show();
-        TilePane tilePane = new TilePane();
-        tilePane.setPrefColumns(3);
-        tilePane.setPrefRows(3);
-        tilePane.setTileAlignment(Pos.CENTER);
+        TilePane controlPane = new TilePane();
+        controlPane.setPrefColumns(2);
+        controlPane.setAlignment(Pos.CENTER);
+        controlPane.setHgap(10);
+        
+        controlPane.getChildren().addAll(startBtn, stopBtn);
 
-        tilePane.getChildren().addAll(
-                new Rectangle(50, 50, Color.RED),
-                new Rectangle(50, 50, Color.GREEN),
-                new Rectangle(50, 50, Color.BLUE),
-                new Rectangle(50, 50, Color.YELLOW),
-                new Rectangle(50, 50, Color.CYAN),
-                new Rectangle(50, 50, Color.PURPLE),
-                new Rectangle(50, 50, Color.BROWN),
-                new Rectangle(50, 50, Color.PINK),
-                new Rectangle(50, 50, Color.ORANGE));
-
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-
+        startBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-                // tilePane.getChildren().
-                tilePane.getChildren().clear();
-                ok();
+                startSimulation();
+                startBtn.setDisable(true);
+                stopBtn.setDisable(false);
+            }
+        });
+        
+        stopBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                stopSimulation();
+                startBtn.setDisable(false);
+                stopBtn.setDisable(true);
             }
         });
 
-        root.getChildren().add(tilePane);
-        root.getChildren().add(btn);
-        Scene scene = new Scene(root);
+        root.getChildren().add(controlPane);
+        
+        Scene scene = new Scene(root, 300, 200);
         scene.setFill(Color.LIGHTGRAY);
-        primaryStage.setTitle("3x3");
+        primaryStage.setTitle("Ant Colony Optimization");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
 }
