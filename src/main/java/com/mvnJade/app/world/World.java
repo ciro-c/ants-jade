@@ -30,7 +30,7 @@ public final class World{
   int mapSize;
   int stepsPerClock = 1;
   int internalStep = 0;
-  int pheromoneDeposit = 500;
+  float pheromoneDeposit = 500.0f;
   TilePane worldGrid = new TilePane();
   Stage stage = new Stage();
 
@@ -99,10 +99,10 @@ public final class World{
       return;
     }
     if (hasFood) {
-      int feromoneLevel = this.map[x][y].getPheromoneFoundFood(); 
+      float feromoneLevel = this.map[x][y].getPheromoneFoundFood(); 
       this.map[x][y].setPheromoneFoundFood(feromoneLevel+pheromoneDeposit);
     } else {
-      int feromoneLevel = this.map[x][y].getPheromoneExploring(); 
+      float feromoneLevel = this.map[x][y].getPheromoneExploring(); 
       this.map[x][y].setPheromoneExploring(feromoneLevel+pheromoneDeposit);
     }
   }
@@ -138,13 +138,13 @@ public final class World{
     ArrayList<Rectangle> toAdd = new ArrayList();
     for (int i = 0; i < mapSize; i++) {
       for (int j = 0; j < mapSize; j++) {
-        int pheromoneExploring = map[i][j].getPheromoneExploring();
-        int pheromoneFoundFood = map[i][j].getPheromoneFoundFood();
+        float pheromoneExploring = map[i][j].getPheromoneExploring();
+        float pheromoneFoundFood = map[i][j].getPheromoneFoundFood();
         if (map[i][j].getIsBlock()) {
           continue;
         }
-        pheromoneExploring = (int)(this.PHEROMONE_EVAPORATION_RATE * pheromoneExploring);
-        pheromoneFoundFood = (int)(this.PHEROMONE_EVAPORATION_RATE * pheromoneFoundFood);
+        pheromoneExploring = this.PHEROMONE_EVAPORATION_RATE * pheromoneExploring;
+        pheromoneFoundFood = this.PHEROMONE_EVAPORATION_RATE * pheromoneFoundFood;
         map[i][j].setPheromoneExploring(pheromoneExploring);
         map[i][j].setPheromoneFoundFood(pheromoneFoundFood);
         if (map[i][j].getIsFood() || map[i][j].getIsHome()) {
@@ -152,10 +152,10 @@ public final class World{
         }
         if (pheromoneFoundFood > pheromoneExploring) {
           toAdd.add(new Rectangle(50, 50, Color.GREEN));
-          mapTiles[i][j].updateStyle(TileType.PHEROMONE_FOUND_FOOD, (float)pheromoneFoundFood/1000);
+          mapTiles[i][j].updateStyle(TileType.PHEROMONE_FOUND_FOOD, pheromoneFoundFood/1000.0f);
         } else if (pheromoneExploring > 0) {
           toAdd.add(new Rectangle(50, 50, Color.BLUE));
-          mapTiles[i][j].updateStyle(TileType.PHEROMONE_EXPLORING, (float)pheromoneExploring/1000);
+          mapTiles[i][j].updateStyle(TileType.PHEROMONE_EXPLORING, pheromoneExploring/1000.0f);
         } else {
           toAdd.add(new Rectangle(50, 50, Color.RED));
           mapTiles[i][j].updateStyle(TileType.EMPTY, 1.0f);

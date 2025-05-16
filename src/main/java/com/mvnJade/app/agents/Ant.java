@@ -26,8 +26,8 @@ public class Ant extends Agent {
   double reward = 0;
   double momentumProbability = 0.8;
   double randomProbaility = 0.1;
-  int maxPheromone = 1000;
-  final int impossibleBadPheromone = -1;
+  float maxPheromone = 1000.0f;
+  final float impossibleBadPheromone = -1.0f;
   final double rewardGain = 1.0;
 
   int testMapSize = 30;
@@ -66,7 +66,6 @@ public class Ant extends Agent {
             return;
           }
           moveAnt();
-          // fakeMove();
           return;
         }
 
@@ -78,36 +77,12 @@ public class Ant extends Agent {
         }
 
         moveAnt();
-        // fakeMove();
       }
     });
   }
 
-  private void fakeMove() {
-    // random.nextBoolean();
-    if (x == 0 && y == 0) {
-      x = 1;
-      return;
-    } else if (x == testMapSize - 1 && y == testMapSize - 1) {
-      x = 0;
-      y = 0;
-      return;
-    } else if (y == testMapSize - 1 && x != testMapSize - 1) {
-      x++;
-      return;
-
-    } else if (x == testMapSize - 1) {
-      y++;
-      x = 0;
-      return;
-    }
-
-    x++;
-    return;
-  }
-
   private void moveAnt() {
-    int max = impossibleBadPheromone;
+    float max = impossibleBadPheromone;
     int max_x = x;
     int max_y = y;
     int maxCount = 2;
@@ -122,7 +97,7 @@ public class Ant extends Agent {
           if ((dx == 0 && dy == 0) || nextTile == null || nextTile.getIsBlock()) {
             continue;
           }
-          int exploringPheromone = nextTile.getPheromoneExploring();
+          float exploringPheromone = nextTile.getPheromoneExploring();
           if (exploringPheromone > max) {
             maxCount = 2;
           }
@@ -177,7 +152,7 @@ public class Ant extends Agent {
         if ((dx == 0 && dy == 0) || nextTile == null || nextTile.getIsBlock()) {
           continue;
         }
-        int foodPheromone = nextTile.getPheromoneFoundFood();
+        float foodPheromone = nextTile.getPheromoneFoundFood();
         if (foodPheromone > max) {
           maxCount = 2;
         }
@@ -225,12 +200,12 @@ public class Ant extends Agent {
 
   private void depositPherommones() {
     if (hasFood) {
-      int pheromoneFoundFood = world.getPosition(x, y).getPheromoneFoundFood();
+      float pheromoneFoundFood = world.getPosition(x, y).getPheromoneFoundFood();
       if (pheromoneFoundFood >= maxPheromone) {
         return;
       }
     } else {
-      int pheromoneExploring = world.getPosition(x, y).getPheromoneExploring();
+      float pheromoneExploring = world.getPosition(x, y).getPheromoneExploring();
       if (pheromoneExploring >= maxPheromone) {
         return;
       }

@@ -1,21 +1,21 @@
 package com.mvnJade.app.dto;
 
 public class MapTileDTO {
-  int pheromoneExploring;
-  int pheromoneFoundFood;
+  float pheromoneExploring;
+  float pheromoneFoundFood;
   boolean isHome;
   boolean isBlock;
   boolean isFood;
 
   public MapTileDTO() {
-    this.pheromoneExploring = 0;
-    this.pheromoneFoundFood = 0;
+    this.pheromoneExploring = 0.0f;
+    this.pheromoneFoundFood = 0.0f;
     this.isHome = false;
     this.isBlock = false;
     this.isFood = false;
   }
 
-  public MapTileDTO(int pheromoneExploring, int pheromoneFoundFood) {
+  public MapTileDTO(float pheromoneExploring, float pheromoneFoundFood) {
     this.pheromoneExploring = pheromoneExploring;
     this.pheromoneFoundFood = pheromoneFoundFood;
     this.isHome = false;
@@ -24,18 +24,18 @@ public class MapTileDTO {
   }
 
   public MapTileDTO(boolean isHome, boolean isBlock, boolean isFood) {
-    this.pheromoneExploring = 0;
-    this.pheromoneFoundFood = 0;
+    this.pheromoneExploring = 0.0f;
+    this.pheromoneFoundFood = 0.0f;
     this.isHome = isHome;
     this.isBlock = isBlock;
     this.isFood = isFood;
   }
 
-  public int getPheromoneExploring() {
+  public float getPheromoneExploring() {
     return this.pheromoneExploring;
   }
 
-  public int getPheromoneFoundFood() {
+  public float getPheromoneFoundFood() {
     return this.pheromoneFoundFood;
   }
 
@@ -51,11 +51,11 @@ public class MapTileDTO {
     return this.isFood;
   }
 
-  public void setPheromoneExploring(int pheromoneExploring) {
+  public void setPheromoneExploring(float pheromoneExploring) {
     this.pheromoneExploring = pheromoneExploring;
   }
 
-  public void setPheromoneFoundFood(int pheromoneFoundFood) {
+  public void setPheromoneFoundFood(float pheromoneFoundFood) {
     this.pheromoneFoundFood = pheromoneFoundFood;
   }
 
