@@ -114,7 +114,9 @@ public class Ant extends Agent {
     int max_x = x;
     int max_y = y;
     int count = 2;
-
+    MapTileDTO currentTile = world.getPosition(x, y);
+    currentTile.removeAnt();
+    
     if (hasFood) { // follow home pheromone
       for (int dx = -1; dx < 2; dx++) {
         for (int dy = -1; dy < 2; dy++) {
@@ -167,6 +169,7 @@ public class Ant extends Agent {
       y = max_y;
       
       MapTileDTO newPosition = world.getPosition(max_x, max_y);
+      newPosition.addAnt();
       if (newPosition != null && newPosition.getIsHome()) { // reward me next time! And change my status
         reward = rewardGain;
         hasFood = !hasFood;
@@ -223,6 +226,7 @@ public class Ant extends Agent {
       y = max_y;
       
       MapTileDTO newPosition = world.getPosition(max_x, max_y);
+      newPosition.addAnt();
       if (newPosition != null && newPosition.getIsFood()) { // reward me next time! And change my status
         reward = rewardGain;
         hasFood = !hasFood;

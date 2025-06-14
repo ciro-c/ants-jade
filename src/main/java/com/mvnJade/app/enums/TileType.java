@@ -2,7 +2,8 @@ package com.mvnJade.app.enums;
 
 public enum TileType {
   HOME("-fx-background-color: red"),
-  BLOCK("-fx-background-color: black"),
+  BLOCK("-fx-background-color: brown"),
+  ANT("-fx-background-color: black"),
   FOOD("-fx-background-color: green"),
   PHEROMONE_EXPLORING("-fx-background-color: yellow"),
   PHEROMONE_FOUND_FOOD("-fx-background-color: blue"),

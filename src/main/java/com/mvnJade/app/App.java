@@ -9,6 +9,9 @@ import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -36,7 +39,7 @@ public class App extends Application {
     Object[] agentArgs = {};
     int antNumberToLaunch = 1000;
     int antsLaunched = 0;
-    int worldSize = 30;
+    int worldSize = 500;
     boolean isRunning = false;
 
     public void startSimulation() {
@@ -90,6 +93,33 @@ public class App extends Application {
         stopBtn.setText("Stop Simulation");
         stopBtn.setDisable(true);
 
+        // Create slider for stepsPerClock control
+        Label sliderLabel = new Label("Steps Per Clock: 1");
+        Slider stepsSlider = new Slider(1, 20, 1);
+        stepsSlider.setShowTickLabels(true);
+        stepsSlider.setShowTickMarks(true);
+        stepsSlider.setMajorTickUnit(5);
+        stepsSlider.setMinorTickCount(4);
+        stepsSlider.setBlockIncrement(1);
+        stepsSlider.setSnapToTicks(true);
+        
+        // Update label and World's stepsPerClock when slider value changes
+        stepsSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            int value = newValue.intValue();
+            sliderLabel.setText("Steps Per Clock: " + value);
+            
+            // Update the World's stepsPerClock if it exists
+            World world = World.getInstance();
+            if (world != null) {
+                world.setStepsPerClock(value);
+            }
+        });
+        
+        // Create HBox to hold the slider and its label
+        HBox sliderBox = new HBox(10);
+        sliderBox.setAlignment(Pos.CENTER);
+        sliderBox.getChildren().addAll(sliderLabel, stepsSlider);
+
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
 
@@ -118,9 +148,9 @@ public class App extends Application {
             }
         });
 
-        root.getChildren().add(controlPane);
+        root.getChildren().addAll(controlPane, sliderBox);
         
-        Scene scene = new Scene(root, 300, 200);
+        Scene scene = new Scene(root, 400, 250);
         scene.setFill(Color.LIGHTGRAY);
         primaryStage.setTitle("Ant Colony Optimization");
         primaryStage.setScene(scene);

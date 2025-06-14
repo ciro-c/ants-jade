@@ -6,6 +6,7 @@ public class MapTileDTO {
   boolean isHome;
   boolean isBlock;
   boolean isFood;
+  int numAnts;
 
   public MapTileDTO() {
     this.pheromoneExploring = 0.0f;
@@ -13,6 +14,7 @@ public class MapTileDTO {
     this.isHome = false;
     this.isBlock = false;
     this.isFood = false;
+    this.numAnts = 0;
   }
 
   public MapTileDTO(float pheromoneExploring, float pheromoneFoundFood) {
@@ -21,6 +23,7 @@ public class MapTileDTO {
     this.isHome = false;
     this.isBlock = false;
     this.isFood = false;
+    this.numAnts = 0;
   }
 
   public MapTileDTO(boolean isHome, boolean isBlock, boolean isFood) {
@@ -29,6 +32,7 @@ public class MapTileDTO {
     this.isHome = isHome;
     this.isBlock = isBlock;
     this.isFood = isFood;
+    this.numAnts = 0;
   }
 
   public float getPheromoneExploring() {
@@ -45,6 +49,20 @@ public class MapTileDTO {
 
   public boolean getIsBlock() {
     return this.isBlock;
+  }
+
+  public int getAnts() {
+    return this.numAnts;
+  }
+
+  public void addAnt() {
+    this.numAnts++;
+  }
+
+  public void removeAnt() {
+    if (this.numAnts > 0) {
+    this.numAnts--;
+  }
   }
 
   public boolean getIsFood() {

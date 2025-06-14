@@ -7,8 +7,8 @@ import javafx.scene.layout.StackPane;
 public class MapTile extends StackPane {
 
     // == constants ==
-    public static final double ITEM_HEIGHT = 25.0d;
-    public static final double ITEM_WIDTH = 25.0d;
+    public static final double ITEM_HEIGHT = 3.0d;
+    public static final double ITEM_WIDTH = 3.0d;
 
     private float intensity = 1.0f;
     private TileType tileType = TileType.EMPTY;

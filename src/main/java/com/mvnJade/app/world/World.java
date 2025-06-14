@@ -163,6 +163,7 @@ public final class World{
       for (int j = 0; j < mapSize; j++) {
         float pheromoneExploring = map[i][j].getPheromoneExploring();
         float pheromoneFoundFood = map[i][j].getPheromoneFoundFood();
+        int antsNumber = map[i][j].getAnts();
         
         if (map[i][j].getIsBlock()) {
           continue;
@@ -186,6 +187,8 @@ public final class World{
         } else if (pheromoneExploring > 0) {
           mapTiles[i][j].updateStyle(TileType.PHEROMONE_EXPLORING, 
               Math.min(pheromoneExploring / LIKELY_MAX_PHEROMONE, 1.0f));
+        } else if (antsNumber > 0) {
+          mapTiles[i][j].updateStyle(TileType.ANT, 1.0f);
         } else {
           mapTiles[i][j].updateStyle(TileType.EMPTY, 1.0f);
         }
@@ -195,5 +198,18 @@ public final class World{
 
   public int getStepsPerClock() {
     return stepsPerClock;
+  }
+  
+  /**
+   * Sets the number of steps per clock cycle.
+   * Higher values make the simulation run faster.
+   * @param steps - number of steps per clock (1-20)
+   */
+  public void setStepsPerClock(int steps) {
+    if (steps > 0) {
+      this.stepsPerClock = steps;
+      // Reset internal step counter to prevent inconsistent timing
+      this.internalStep = 0;
+    }
   }
 }
