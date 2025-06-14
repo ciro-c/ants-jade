@@ -1,11 +1,6 @@
 package com.mvnJade.app.agents;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 import com.mvnJade.app.MersenneTwisterFast;
 import com.mvnJade.app.dto.MapTileDTO;
@@ -46,9 +41,9 @@ public class Ant extends Agent {
     diagonalCutDown = world.getDiagonalCutDown();
     rewardGain = world.getReward();
     
-    addBehaviour(new TickerBehaviour(this, 10) {
+    addBehaviour(new TickerBehaviour(this, 1) {
       protected void onTick() {
-        if (!world.getRunning()) {
+        if (!world.getSimulationRunning()) {
           return;
         }
 
@@ -70,9 +65,12 @@ public class Ant extends Agent {
     });
   }
 
+  // private void depositPheromones() {
+  //   world.putPheromones(x, y, hasFood);
+  // }
+
   private void depositPheromones() {
     MapTileDTO currentTile = world.getPosition(x, y);
-    
     if (hasFood) { // deposit food pheromone
       float max = currentTile.getPheromoneFoundFood();
       for (int dx = -1; dx < 2; dx++) {

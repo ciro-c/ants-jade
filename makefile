@@ -1,71 +1,31 @@
-PATH_PROJECT_JAR = target/maven-jade-1.0-SNAPSHOT.jar
-PATH_LIBS    = src/libs
-LIBS_JAR    = $(PATH_LIBS)/jade.jar:$(PATH_LIBS)/jadeExamples.jar:$(PATH_LIBS)/commons-codec-1.3.jar
-PROJECT_CLASS_PATH = $(LIBS_JAR):$(PATH_PROJECT_JAR)
-PROJECT_GROUP    = com.mvnJade.app
-JADE_AGENTS      = mainAgent:$(PROJECT_GROUP).HelloWorld;
-JADE_FLAGS 		 = -gui -agents "$(JADE_AGENTS)"
+# Nome do artefato final gerado pelo maven-shade-plugin
+FAT_JAR_NAME = maven-jade-1.0-SNAPSHOT.jar
+FAT_JAR_PATH = target/$(FAT_JAR_NAME)
 
-.PHONY:
-	clean
-	build-and-run
+# Argumentos para a sua aplicação (que por sua vez iniciará o JADE)
+# Deixamos o -gui por enquanto, mas ele pode não funcionar bem com a janela LWJGL
+# O importante é a lista de agentes.
+JADE_AGENTS = mainAgent:com.mvnJade.app.HelloWorld;
+JADE_FLAGS  = -agents "$(JADE_AGENTS)"
 
-build-and-run:
-	@echo "Gerando a build e executando o projeto"
-	make build run
+.PHONY: build run clean
 
+# Constrói o projeto criando o "fat JAR" executável
 build:
-	@echo "Gerando a build do projeto"
-	make build-libs build-maven
+	@echo "Gerando o JAR executável com todas as dependências..."
+	./mvnw clean package
 
-build-libs:
-	@echo "Instalando JAR libs externas"
-	make install-jade install-commons install-examples-jade
-
-build-maven:
-	@echo "Build do projeto"
-	./mvnw clean install
-
+# Executa o JAR que foi gerado
 run:
-	@echo "Executando o projeto com a última build criada"
-	java -cp $(PROJECT_CLASS_PATH) jade.Boot $(JADE_FLAGS)
+	@echo "Executando o projeto a partir do JAR empacotado..."
+	java -jar $(FAT_JAR_PATH)
 
-run-gui:
-	@echo "Executando o projeto com gui"
-	./mvnw javafx:run
+# Executa o JAR que foi gerado
+run-custom:
+	@echo "Executando o projeto a partir do JAR empacotado..."
+	java -jar $(FAT_JAR_PATH) $(JADE_FLAGS)
 
+# Limpa os arquivos gerados pelo build
 clean:
-	@echo "Removendo a build do projeto"
+	@echo "Limpando o projeto..."
 	./mvnw clean
-
-build-and-run-win:
-	@echo "Gerando a build e executando o projeto"
-	make build-win run
-
-build-win:
-	@echo "Gerando a build do projeto"
-	.\mvnw install
-
-install-jade:
-	@echo "Instalando Jade"
-	./mvnw clean install:install-file -Dfile=$(PATH_LIBS)/jade.jar \
-   -DgroupId=jade \
-   -DartifactId=jade \
-   -Dversion=4.6.0 \
-   -Dpackaging=jar
-
-install-commons:
-	@echo "Instalando Commons"
-	./mvnw clean install:install-file -Dfile=$(PATH_LIBS)/commons-codec-1.3.jar \
-   -DgroupId=commons-codec \
-   -DartifactId=commons-codec \
-   -Dversion=1.3.0 \
-   -Dpackaging=jar
-
-install-examples-jade:
-	@echo "Instalando exemplos jade"
-	./mvnw clean install:install-file -Dfile=$(PATH_LIBS)/jadeExamples.jar \
-   -DgroupId=jadeExamples \
-   -DartifactId=jadeExamples \
-   -Dversion=1.0.0 \
-   -Dpackaging=jar
