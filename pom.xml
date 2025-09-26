@@ -192,11 +192,6 @@
       <artifactId>commons-codec</artifactId>
       <version>1.16.0</version>
     </dependency>
-    <dependency>
-      <groupId>jadeExamples</groupId>
-      <artifactId>jadeExamples</artifactId>
-      <version>1.0.0</version>
-    </dependency>
 
     <!-- lwjgl dependencies -->
     <dependency>
