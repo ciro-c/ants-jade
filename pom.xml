@@ -11,10 +11,9 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <lwjgl.version>3.3.6</lwjgl.version>
-    <main.class>com.mvnJade.app.SimulationWindow</main.class>
+    <main.class>com.mvnJade.app.App</main.class>
   </properties>
 
-  <!-- Supported plataforms -->
   <profiles>
     <profile>
       <id>lwjgl-natives-freebsd-amd64</id>
@@ -193,7 +192,6 @@
       <version>1.16.0</version>
     </dependency>
 
-    <!-- lwjgl dependencies -->
     <dependency>
       <groupId>org.lwjgl</groupId>
       <artifactId>lwjgl</artifactId>

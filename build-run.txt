@@ -1,0 +1,73 @@
+Executando o projeto a partir do JAR empacotado...
+java -jar target/maven-jade-1.0-SNAPSHOT.jar
+Iniciando o Sistema Multiagentes...
+Criando agentes no JADE...
+A Bola está em campo!
+Iniciando o Motor Gráfico...
+Jogador Jogador1 entrou em campo!
+Jogador Jogador2 entrou em campo!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+Jogador1 chutou a bola!
+Jogador2 chutou a bola!
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007f87daa4c64e, pid=80358, tid=80410
+#
+# JRE version: OpenJDK Runtime Environment (21.0.10+7) (build 21.0.10+7)
+# Java VM: OpenJDK 64-Bit Server VM (21.0.10+7, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, linux-amd64)
+# Problematic frame:
+# C  [libEGL_nvidia.so.0+0xb564e]
+#
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %d %F" (or dumping to /home/ciroc/Documents/ants-jade/core.80358)
+#
+# An error report file with more information is saved as:
+# /home/ciroc/Documents/ants-jade/hs_err_pid80358.log
+#
+# If you would like to submit a bug report, please visit:
+#   https://bugreport.java.com/bugreport/crash.jsp
+#
